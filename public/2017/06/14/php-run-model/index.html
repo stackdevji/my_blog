@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="http://yoursite.com">
+  <title>初识PHP的几种运行模式 | chenji</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="了解php运行原理之前先认识下php的运行模式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识PHP的几种运行模式">
+<meta property="og:url" content="http://yoursite.com/2017/06/14/php-run-model/index.html">
+<meta property="og:site_name" content="chenji">
+<meta property="og:description" content="了解php运行原理之前先认识下php的运行模式。">
+<meta property="og:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1497420085622&di=5e4b1db7be7dd0daab51cd392a68a96f&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F53%2F82%2F50658PIC2kb_1024.png">
+<meta property="og:updated_time" content="2017-06-15T10:04:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识PHP的几种运行模式">
+<meta name="twitter:description" content="了解php运行原理之前先认识下php的运行模式。">
+<meta name="twitter:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1497420085622&di=5e4b1db7be7dd0daab51cd392a68a96f&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F53%2F82%2F50658PIC2kb_1024.png">
+  
+    <link rel="alternative" href="/atom.xml" title="chenji" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="https://avatars0.githubusercontent.com/u/21096631?v=3&amp;s=400" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">CHENJI</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">我的提升空间还很大很大</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/stackdevji" title="github"><i class="icon-github"></i></a>
+		        
+					<a class="weibo" target="_blank" href="http://weibo.com/3157867187/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="weibo"><i class="icon-weibo"></i></a>
+		        
+					<a class="zhihu" target="_blank" href="https://www.zhihu.com/question/24107749" title="zhihu"><i class="icon-zhihu"></i></a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-sort"></i></div>
+  		<h1 class="header-author js-mobile-header hide">CHENJI</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="https://avatars0.githubusercontent.com/u/21096631?v=3&amp;s=400" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">CHENJI</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">我的提升空间还很大很大</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/stackdevji" title="github"><i class="icon-github"></i></a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/3157867187/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="weibo"><i class="icon-weibo"></i></a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/question/24107749" title="zhihu"><i class="icon-zhihu"></i></a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-php-run-model" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      初识PHP的几种运行模式
+    </h1>
+  
+
+        <a href="/2017/06/14/php-run-model/" class="archive-article-date">
+  	<time datetime="2017-06-14T02:53:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-14</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>了解php运行原理之前先认识下php的运行模式。<br><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1497420085622&di=5e4b1db7be7dd0daab51cd392a68a96f&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F53%2F82%2F50658PIC2kb_1024.png" width="30%" height="25%"></p>
+<a id="more"></a>
+<h2 id="PHP的5中常见的运行模式"><a href="#PHP的5中常见的运行模式" class="headerlink" title="PHP的5中常见的运行模式"></a>PHP的5中常见的运行模式</h2><ol>
+<li><strong>cgi</strong></li>
+<li><strong>fastcgi</strong></li>
+<li><strong>cli</strong></li>
+<li><strong>web模块模式</strong></li>
+<li><strong>isapi</strong></li>
+</ol>
+<blockquote>
+<p>备注：php5.3以后，不再有isapi模式，安装php之后也不会再有php5isapi.dll这个文件了。</p>
+</blockquote>
+<h3 id="cgi"><a href="#cgi" class="headerlink" title="cgi"></a>cgi</h3><p>cgi即通用网关接口（common gateway interface）,它是用来进行客户端（浏览器）和web服务器之间用来交互的程序。<br>这么说的话挺让人费解，是的我开始就没有理解cgi到底是用来干什么的？好的，我们先了解下从 客户端-&gt;web服务器-&gt;cgi<br>之间的数据是怎么传输的。</p>
+<h4 id="什么是cgi"><a href="#什么是cgi" class="headerlink" title="什么是cgi"></a>什么是cgi</h4><p>客户端点击某个操作之后向服务器发出请求，web服务器接收到这个请求要干什么？它先看自己能不能解析这些文件，如果是<br>能够自己解析的文件比如html文件，那么服务器会去查找到这个文件并返回给客户端。要是不能解析的话，那么服务器就会为<br>解析这个请求开启一个cgi程序，然后web服务器将客户端发来请求的数据交给这个cgi程序，OK,这个时候体现出cgi的作用了，<br>这个对应的cgi程序是要保证web服务器传过来数据要遵循某个标准的，就是说，你服务器要让我为你对应解析相应文件，那么你<br>给我传过来的数据就要符合对应解析这个文件的标准。这就是通过网关接口的其中一个作用：我们编写的程序和web服务器之间接口的标准。</p>
+<p>标准？什么标准？好的，再举个例子：比如我们编写的程序是用php来写的，而且保存在某个php脚本中（php文件）要知道nginx解析不了php文件，那就为其开启一个cgi程序（php-cgi）用来解析php脚本。好了，解析器有了，那我要开始通过解析器来处理客户端发过来的请求了吧。那web服务器传给php-cgi的数据得遵循某些标准：url得有吧，post数据得有吧，header也不能少吧。</p>
+<p>之后就是cgi程序处理完请求之后，（这其中可能使用外部程序，比如数据库）然后把请求的结果返回个web服务器，web服务器在把结果响应给客户端。我理解就是这个一个过程。</p>
+<h4 id="cgi工作原理"><a href="#cgi工作原理" class="headerlink" title="cgi工作原理"></a>cgi工作原理</h4><p>以上我们大概了解web服务器每处理一个需要cgi程序的请求就会开启一个cgi程序，也就是每次都fork一个进程，在cgi执行之前，web服务器要为cgi设置环境变量，初始化执行环境，比如php-cgi每次执行之前都会解析php.ini文件。每个被激活的cgi程序都有自己唯一的一组环境变量。事实上对于一个非常繁忙的Web服务器，可能同时会有同一个cgi程序的很多个进程在运行，这时每个cgi程序的进程都有自己的运行环境，互不影响。当一个cgi执行成功之后这些环境变量也会对应销毁。那么问题来了，每次fork一个进程都会去进行初始化环境。那么当web服务器的请求量比较大的时候，这个的模式是相当占用内存和cpu时间的，这时性能就会有问题了。</p>
+<h3 id="fastcgi"><a href="#fastcgi" class="headerlink" title="fastcgi"></a>fastcgi</h3><h3 id="cli"><a href="#cli" class="headerlink" title="cli"></a>cli</h3><h3 id="模块模式（web模块）"><a href="#模块模式（web模块）" class="headerlink" title="模块模式（web模块）"></a>模块模式（web模块）</h3><h3 id="isapi"><a href="#isapi" class="headerlink" title="isapi"></a>isapi</h3>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/底层剖析/">底层剖析</a></li></ul>
+	</div>
+
+      
+
+      
+
+      
+        <div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode"></div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2017/05/25/laravel/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Laravel 踩坑大集合</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 CHENJI
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/Laravel/" style="font-size: 10px;">Laravel</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/mysql/" style="font-size: 13.33px;">mysql</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/php/" style="font-size: 16.67px;">php</a> <a href="/tags/学习笔记/" style="font-size: 20px;">学习笔记</a> <a href="/tags/底层剖析/" style="font-size: 10px;">底层剖析</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://bettercuicui.github.io/">杰大屌的博客</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://mushanshitiancai.github.io/">木杉的博客</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">史晨吉：&lt;br&gt;毕业于哈理工，目前就职于学霸君&lt;br&gt;&lt;br&gt;心有猛虎，细嗅蔷薇&lt;br&gt;&lt;br&gt;</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="http://yoursite.com">
+  <title>PHP运行模式 | chenji</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="了解php运行原理之前先认识下php的运行模式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP运行模式">
+<meta property="og:url" content="http://yoursite.com/2017/06/15/php-run-md/index.html">
+<meta property="og:site_name" content="chenji">
+<meta property="og:description" content="了解php运行原理之前先认识下php的运行模式。">
+<meta property="og:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1497420085622&di=5e4b1db7be7dd0daab51cd392a68a96f&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F53%2F82%2F50658PIC2kb_1024.png">
+<meta property="og:updated_time" content="2017-06-16T08:20:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP运行模式">
+<meta name="twitter:description" content="了解php运行原理之前先认识下php的运行模式。">
+<meta name="twitter:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1497420085622&di=5e4b1db7be7dd0daab51cd392a68a96f&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F53%2F82%2F50658PIC2kb_1024.png">
+  
+    <link rel="alternative" href="/atom.xml" title="chenji" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="https://avatars0.githubusercontent.com/u/21096631?v=3&amp;s=400" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">CHENJI</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">少说多做</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/stackdevji" title="github"><i class="icon-github"></i></a>
+		        
+					<a class="weibo" target="_blank" href="http://weibo.com/3157867187/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="weibo"><i class="icon-weibo"></i></a>
+		        
+					<a class="zhihu" target="_blank" href="https://www.zhihu.com/question/24107749" title="zhihu"><i class="icon-zhihu"></i></a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-sort"></i></div>
+  		<h1 class="header-author js-mobile-header hide">CHENJI</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="https://avatars0.githubusercontent.com/u/21096631?v=3&amp;s=400" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">CHENJI</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">少说多做</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/stackdevji" title="github"><i class="icon-github"></i></a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/3157867187/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="weibo"><i class="icon-weibo"></i></a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/question/24107749" title="zhihu"><i class="icon-zhihu"></i></a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-php-run-md" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PHP运行模式
+    </h1>
+  
+
+        <a href="/2017/06/15/php-run-md/" class="archive-article-date">
+  	<time datetime="2017-06-15T10:20:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-15</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>了解php运行原理之前先认识下php的运行模式。<br><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1497420085622&di=5e4b1db7be7dd0daab51cd392a68a96f&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F53%2F82%2F50658PIC2kb_1024.png" width="30%" height="25%"></p>
+<a id="more"></a>
+<h2 id="PHP的5中常见的运行模式"><a href="#PHP的5中常见的运行模式" class="headerlink" title="PHP的5中常见的运行模式"></a>PHP的5中常见的运行模式</h2><ol>
+<li><strong>cgi</strong></li>
+<li><strong>fastcgi</strong></li>
+<li><strong>cli</strong></li>
+<li><strong>web模块模式</strong></li>
+<li><strong>isapi</strong></li>
+</ol>
+<blockquote>
+<p>备注：php5.3以后，不再有isapi模式，安装php之后也不会再有php5isapi.dll这个文件了。</p>
+</blockquote>
+<h3 id="一：cgi"><a href="#一：cgi" class="headerlink" title="一：cgi"></a>一：cgi</h3><p>cgi即通用网关接口（common gateway interface）,它是用来进行客户端（浏览器）和web服务器之间用来交互的程序。<br>这么说的话挺让人费解，是的我开始就没有理解cgi到底是用来干什么的？好的，我们先了解下从 客户端-&gt;web服务器-&gt;cgi<br>之间的数据是怎么传输的。</p>
+<h4 id="什么是cgi"><a href="#什么是cgi" class="headerlink" title="什么是cgi"></a>什么是cgi</h4><p>客户端点击某个操作之后向服务器发出请求，web服务器接收到这个请求要干什么？它先看自己能不能解析这些文件，如果是<br>能够自己解析的文件比如html文件，那么服务器会去查找到这个文件并返回给客户端。要是不能解析的话，那么服务器就会为<br>解析这个请求开启一个cgi程序，然后web服务器将客户端发来请求的数据交给这个cgi程序，OK,这个时候体现出cgi的作用了，<br>这个对应的cgi程序是要保证web服务器传过来数据要遵循某个标准的，就是说，你服务器要让我为你对应解析相应文件，那么你<br>给我传过来的数据就要符合对应解析这个文件的标准。这就是通过网关接口的其中一个作用：我们编写的程序和web服务器之间接口的标准。</p>
+<p>标准？什么标准？好的，再举个例子：比如我们编写的程序是用php来写的，而且保存在某个php脚本中（php文件）要知道nginx解析不了php文件，那就为其开启一个cgi程序（php-cgi）用来解析php脚本。好了，解析器有了，那我要开始通过解析器来处理客户端发过来的请求了吧。那web服务器传给php-cgi的数据得遵循某些标准：url得有吧，post数据得有吧，header也不能少吧。</p>
+<p>之后就是cgi程序处理完请求之后，（这其中可能使用外部程序，比如数据库）然后把请求的结果返回个web服务器，web服务器在把结果响应给客户端。我理解就是这个一个过程。</p>
+<h4 id="cgi工作原理"><a href="#cgi工作原理" class="headerlink" title="cgi工作原理"></a>cgi工作原理</h4><p>以上我们大概了解web服务器每处理一个需要cgi程序的请求就会开启一个cgi程序，也就是每次都fork一个进程，在cgi执行之前，web服务器要为cgi设置环境变量，初始化执行环境，比如php-cgi每次执行之前都会解析php.ini文件。每个被激活的cgi程序都有自己唯一的一组环境变量。事实上对于一个非常繁忙的Web服务器，可能同时会有同一个cgi程序的很多个进程在运行，这时每个cgi程序的进程都有自己的运行环境，互不影响。当一个cgi执行成功之后这些环境变量也会对应销毁。那么问题来了，每次fork一个进程都会去进行初始化环境。那么当web服务器的请求量比较大的时候，这个的模式是相当占用内存和cpu时间的，这时性能就会有问题了。</p>
+<h3 id="二：fastcgi"><a href="#二：fastcgi" class="headerlink" title="二：fastcgi"></a>二：fastcgi</h3><p>cgi（Fork-And-Execute模式）比较让人诟病,所以fastcgi像是cgi的升级版本，我私下里把fastcgi也理解成cgi的一种，但是显然不太妥当，我觉得fastcgi更像是一种协议。为什么这么说呢，百度百科说它像是一个常驻型的cgi，主要是因为，一旦服务器开启就会载入fastcgi，fastcgi相比于cgi不会每次来发来一个请求就去fork一个cgi进程，而是常驻存在，在开启的时候只初始化一次环境，（如只解析一次php.ini），然后他会开启多个work进程，如果请求发来，它就会对应的将相应的数据发给一个work进程（如php-cgi程序）然后进行处理请求。并返回结果给服务器。而且当work进程不够用的时候，fastcgi会预先开启出来一部分work进程，当空闲的时候，又会关掉一些多余的work进程，php手册上把fastcgi有叫做进程管理器，我觉得再合适不过了。</p>
+<h4 id="fastcgi工作原理-摘自百度百科"><a href="#fastcgi工作原理-摘自百度百科" class="headerlink" title="fastcgi工作原理 摘自百度百科"></a>fastcgi工作原理 摘自百度百科</h4><ol>
+<li>Web Server启动时载入FastCGI进程管理器（IIS ISAPI或Apache Module).</li>
+<li>FastCGI进程管理器自身初始化，启动多个CGI解释器进程(可见多个php-cgi)并等待来自Web Server的连接。</li>
+<li>当客户端请求到达Web Server时，FastCGI进程管理器选择并连接到一个CGI解释器。Web server将CGI环境变量和标准输入发送到FastCGI子进程php-cgi。</li>
+<li>FastCGI子进程完成处理后将标准输出和错误信息从同一连接返回Web Server。当FastCGI子进程关闭连接时，请求便处理完成。FastCGI子进程接着等待并处理来自FastCGI进程管理器(运行在Web Server中)的下一个连接。 在CGI模式中，php-cgi在此便退出了。</li>
+</ol>
+<p>在上述情况中，你可以想象CGI通常有多慢。每一个Web请求PHP都必须重新解析php.ini、重新载入全部扩展并重初始化全部数据结构。使用FastCGI，所有这些都只在进程启动时发生一次。一个额外的好处是，持续数据库连接(Persistent database connection)可以工作。</p>
+<h4 id="fastcgi缺点"><a href="#fastcgi缺点" class="headerlink" title="fastcgi缺点"></a>fastcgi缺点</h4><p>因为是多进程，所以比CGI多线程消耗更多的服务器内存，PHP-CGI解释器每进程消耗7至25兆内存，将这个数字乘以50或100就是很大的内存数。</p>
+<p>我操，这有个问题：CGI多线程 那么，cgi模式下，启动的cgi程序到底是进程还是线程？</p>
+<h4 id="php-fpm"><a href="#php-fpm" class="headerlink" title="php-fpm"></a>php-fpm</h4><p>PHP-FPM是一个PHPFastCGI管理器，是只用于PHP的。是一个实现了Fastcgi的程序，被PHP官方收了</p>
+<blockquote>
+<p>大家都知道，PHP的解释器是php-cgi。php-cgi只是个CGI程序，他自己本身只能解析请求，返回结果，不会进程管理（所以就出现了一些能够调度php-cgi进程的程序，比如说由lighthttpd分离出来的spawn-fcgi。好了PHP-FPM也是这么个东西，在长时间的发展后，逐渐得到了大家的认可（要知道，前几年大家可是抱怨PHP-FPM稳定性太差的），也越来越流行。</p>
+</blockquote>
+<p>网上有的说，fastcgi是一个协议，php-fpm实现了这个协议</p>
+<blockquote>
+<p>对</p>
+</blockquote>
+<p>有的说，php-fpm是fastcgi进程的管理器，用来管理fastcgi进程的</p>
+<blockquote>
+<p>不太对，首先fastcgi就是一个进程管理器，它本身不是一个进程，而php-fpm管理的对象是php-cgi</p>
+</blockquote>
+<p>所以总的来说 php-fpm是</p>
+<blockquote>
+<p>php-fpm实现了fastcgi，它用来管理php-cgi</p>
+</blockquote>
+<p>注：</p>
+<blockquote>
+<p>对于PHP 5.3.3之前的php来说，是一个补丁包。旨在将FastCGI进程管理整合进PHP包中。如果你使用的是PHP5.3.3之前的PHP的话，就必须将它patch到你的PHP源代码中，在编译安装PHP后才可以使用。从PHP 5.4 RC2开始，php-fpm已经转正了，不再被php团队标注为EXPERIMENTAL（实验性的东西）相对Spawn-FCGI，PHP-FPM在CPU和内存方面的控制都更胜一筹，而且前者很容易崩溃，必须用crontab进行监控，而PHP-FPM则没有这种烦恼，它可以有效控制内存和进程、可以平滑重载PHP配置，比spawn-fcgi具有更多优点，所以被PHP官方收录了。在./configure的时候带 –enable-fpm参数即可开启PHP-FPM。</p>
+</blockquote>
+<h4 id="fpm的相关命令"><a href="#fpm的相关命令" class="headerlink" title="fpm的相关命令"></a>fpm的相关命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">php-fpm&#123;start|stop|quit|restart|reload|logrotate&#125;</div><div class="line">--start 启动php的fastcgi进程</div><div class="line">--stop 强制终止php的fastcgi进程</div><div class="line">--quit 平滑终止php的fastcgi进程</div><div class="line">--restart 重启php的fastcgi进程</div><div class="line">--reload 重新平滑加载php的php.ini</div><div class="line">--logrotate 重新启用log文件</div></pre></td></tr></table></figure>
+<h3 id="三：cli"><a href="#三：cli" class="headerlink" title="三：cli"></a>三：cli</h3><p>附上原文:</p>
+<blockquote>
+<p>What is PHP CLI? PHP CLI is a short for PHP Command Line Interface. As the name implies, this is a way of using PHP in the system command line. Or by other words it is a way of running PHP Scripts that aren’t on a web server (such as Apache web server or Microsoft IIS). People usually treat PHP as web development, server side tool. However, PHP CLI applies all advantages of PHP to shell scripting allowing to create either service side supporting scripts or system application even with GUI!<br>PHP CLI is available on all popular operating systems: Linux, Windows, OSX, Solaris. Popular Linux distributions (such as Ubuntu, Debian, Fedora Core, Suse and etc.) allow to install PHP CLI from package manager (e.g. Synaptic or similar) with couple of mouse clicks. This makes installation hassle free and you can start using it within a seconds!<br>PHP CLI SAPI was first released in PHP 4.2.0 as experimental, but as of version PHP 4.3.0 (including PHP5), it is fully supported and enabled by default. PHP CLI is just a new SAPI type (Server Application Programming Interface) that focused on developing shell (or desktop as well) applications with PHP. It’s worth mentioning that PHP CLI and PHP CGI are different SAPI’s although they do share many of the same behaviours.<br>If you have standard installation of PHP for Apache web server, then there are very high chances that you already have PHP CLI installed on your system. You chances are even higher if your system is running Linux. If you unlucky enough not to have it buy default, then you need to recompile your PHP with the –enable-cli flag or reinstall from the package that does have it. If you are running Windows, then you probably need to add php executable to your system path.</p>
+</blockquote>
+<p>PHP CLI 是PHP Command Line Interface的简称，它是一种通过命令行运行php的一种方式。换句话说，它是一种区别于Web Server（例如Apache Web Server 或者 Microsoft IIS）的能够运行php脚本的方式。人们通常认为php是用来进行web开发的，然而，PHP CLI提供了所有的PHP的优势。PHP shell脚本允许创建要么支持脚本，要么支持应用程序，甚至是支持GUI的服务端。</p>
+<p>PHP CLI 在PHP 4.2.0以前还是实验性的，但是在4.3.0以后默认的已经转正了，它是一种新类型的CLI SAPI(Server Application Programming Interface)，用来通过php专注于开发shell脚本。值得一提的是，PHP CLI和PHP CGI是不同的SAPI尽管他们之间拥有很多共同的行为。</p>
+<h4 id="为什么要使用PHP-CLI"><a href="#为什么要使用PHP-CLI" class="headerlink" title="为什么要使用PHP CLI"></a>为什么要使用PHP CLI</h4><p>因为他在通过命令行运行php代码有几个优势：</p>
+<ol>
+<li>不需要了解其他语言，比如perl、bash、awk。</li>
+<li>运行用php写的调度任务</li>
+<li>使GUI应用程序中使用PHP和GTK</li>
+<li>重复使用现有的组件</li>
+<li>使用的是多线程功能，能够编写非常健壮的脚本</li>
+<li>使用PHP访问系统STDIN、STDOUT STERR</li>
+</ol>
+<h3 id="四：模块模式（web模块）-COPY"><a href="#四：模块模式（web模块）-COPY" class="headerlink" title="四：模块模式（web模块） COPY"></a>四：模块模式（web模块） <a href="http://www.cnblogs.com/xia520pi/p/3914964.html" target="_blank" rel="external">COPY</a></h3><p>模块模式是以mod_php5模块的形式集成，此时mod_php5模块的作用是接收Apache传递过来的PHP文件请求，并处理这些请求，然后将处理后的结果返回给Apache。如果我们在Apache启动前在其配置文件中配置好了PHP模块（mod_php5）， PHP模块通过注册apache2的ap_hook_post_config挂钩，在Apache启动的时候启动此模块以接受PHP文件的请求。</p>
+<p>除了这种启动时的加载方式，Apache的模块可以在运行的时候动态装载，这意味着对服务器可以进行功能扩展而不需要重新对源代码进行编译，甚至根本不需要停止服务器。我们所需要做的仅仅是给服务器发送信号HUP或者AP_SIG_GRACEFUL通知服务器重新载入模块。但是在动态加载之前，我们需要将模块编译成为动态链接库。此时的动态加载就是加载动态链接库。 Apache中对动态链接库的处理是通过模块mod_so来完成的，因此mod_so模块不能被动态加载，它只能被静态编译进Apache的核心。这意味着它是随着Apache一起启动的。</p>
+<p>Apache是如何加载模块的呢？我们以前面提到的mod_php5模块为例。首先我们需要在Apache的配置文件httpd.conf中添加一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LoadModule php5_module modules/mod_php5.so</div></pre></td></tr></table></figure>
+<p>这里我们使用了LoadModule命令，该命令的第一个参数是模块的名称，名称可以在模块实现的源码中找到。第二个选项是该模块所处的路径。如果需要在服务器运行时加载模块，可以通过发送信号HUP或者AP_SIG_GRACEFUL给服务器，一旦接受到该信号，Apache将重新装载模块，而不需要重新启动服务器。</p>
+<p>该运行模式是我们以前在windows环境下使用apache服务器经常使用的，而在模块化（DLL）中，PHP是与Web服务器一起启动并运行的。（它是apache在CGI的基础上进行的一种扩展，加快PHP的运行效率）。</p>
+<h3 id="五：isapi-COPY"><a href="#五：isapi-COPY" class="headerlink" title="五：isapi COPY"></a>五：isapi <a href="http://www.cnblogs.com/xia520pi/p/3914964.html" target="_blank" rel="external">COPY</a></h3><p>ISAPI（Internet Server Application Program Interface）是微软提供的一套面向Internet服务的API接口，一个ISAPI的DLL，可以在被用户请求激活后长驻内存，等待用户的另一个请求，还可以在一个DLL里设置多个用户请求处理函数，此外，ISAPI的DLL应用程序和WWW服务器处于同一个进程中，效率要显著高于CGI。（由于微软的排他性，只能运行于windows环境）</p>
+<p>PHP作为Apache模块，Apache服务器在系统启动后，预先生成多个进程副本驻留在内存中，一旦有请求出现，就立即使用这些空余的子进程进行处理，这样就不存在生成子进程造成的延迟了。这些服务器副本在处理完一次HTTP请求之后并不立即退出，而是停留在计算机中等待下次请求。对于客户浏览器的请求反应更快，性能较高。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/运行原理/">运行原理</a></li></ul>
+	</div>
+
+      
+
+      
+
+      
+        <div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode"></div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2017/06/16/vscode/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          吐槽下VS Code
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/05/25/laravel/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Laravel 踩坑大集合</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 CHENJI
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/Laravel/" style="font-size: 10px;">Laravel</a> <a href="/tags/clockwork/" style="font-size: 16.67px;">clockwork</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/mysql/" style="font-size: 13.33px;">mysql</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/php/" style="font-size: 20px;">php</a> <a href="/tags/学习笔记/" style="font-size: 16.67px;">学习笔记</a> <a href="/tags/工具/" style="font-size: 16.67px;">工具</a> <a href="/tags/运行原理/" style="font-size: 10px;">运行原理</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://bettercuicui.github.io/">杰大屌的博客</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://mushanshitiancai.github.io/">木杉的博客</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">史晨吉：&lt;br&gt;毕业于哈理工，目前就职于学霸君&lt;br&gt;&lt;br&gt;心有猛虎，细嗅蔷薇&lt;br&gt;&lt;br&gt;</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="http://yoursite.com">
+  <title>Chrome的调试利器Clockwork | chenji</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Clockwork是PHP开发的一个Chrome的扩展工具，它提供了一个新的面板，提供了用于调试和剖析PHP应用程序的各种信息，包括关于request、header、get和post数据、cookie、session数据、数据库查询（database query）、路由和可视化应用程序运行时的信息。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chrome的调试利器Clockwork">
+<meta property="og:url" content="http://yoursite.com/2017/06/22/Clockwork/index.html">
+<meta property="og:site_name" content="chenji">
+<meta property="og:description" content="Clockwork是PHP开发的一个Chrome的扩展工具，它提供了一个新的面板，提供了用于调试和剖析PHP应用程序的各种信息，包括关于request、header、get和post数据、cookie、session数据、数据库查询（database query）、路由和可视化应用程序运行时的信息。">
+<meta property="og:updated_time" content="2017-06-23T07:25:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chrome的调试利器Clockwork">
+<meta name="twitter:description" content="Clockwork是PHP开发的一个Chrome的扩展工具，它提供了一个新的面板，提供了用于调试和剖析PHP应用程序的各种信息，包括关于request、header、get和post数据、cookie、session数据、数据库查询（database query）、路由和可视化应用程序运行时的信息。">
+  
+    <link rel="alternative" href="/atom.xml" title="chenji" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="https://avatars0.githubusercontent.com/u/21096631?v=3&amp;s=400" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">CHENJI</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">少说多做</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/stackdevji" title="github"><i class="icon-github"></i></a>
+		        
+					<a class="weibo" target="_blank" href="http://weibo.com/3157867187/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="weibo"><i class="icon-weibo"></i></a>
+		        
+					<a class="zhihu" target="_blank" href="https://www.zhihu.com/question/24107749" title="zhihu"><i class="icon-zhihu"></i></a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-sort"></i></div>
+  		<h1 class="header-author js-mobile-header hide">CHENJI</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="https://avatars0.githubusercontent.com/u/21096631?v=3&amp;s=400" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">CHENJI</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">少说多做</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/stackdevji" title="github"><i class="icon-github"></i></a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/3157867187/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="weibo"><i class="icon-weibo"></i></a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/question/24107749" title="zhihu"><i class="icon-zhihu"></i></a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-Clockwork" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Chrome的调试利器Clockwork
+    </h1>
+  
+
+        <a href="/2017/06/22/Clockwork/" class="archive-article-date">
+  	<time datetime="2017-06-22T08:31:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-22</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Clockwork是PHP开发的一个Chrome的扩展工具，它提供了一个新的面板，提供了用于调试和剖析PHP应用程序的各种信息，包括关于request、header、get和post数据、cookie、session数据、数据库查询（database query）、路由和可视化应用程序运行时的信息。<br><a id="more"></a></p>
+<p>Clockwork存储库包含的服务器端组件，会收集所有的数据，并以json格式存储他们，并为他们提供在Chrome开发工具扩展中显示。</p>
+<h3 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h3><p>安装Clockwork之后对我们程序运行的各种信息的可视化程度大大提高，我们可以看到页面加载之后调用接口的耗时时间、头信息等等。最方便的是方便我们查看程序的运行日志，和sql语句，可以很方便的帮助我们调试程序。</p>
+<p>Clockwork提供了对Laravel、Slim 2和CodeIgniter 2.1框架的支持，您可以通过一个可扩展的API为任何其他或自定义框架添加支持。</p>
+<h3 id="Laravel"><a href="#Laravel" class="headerlink" title="Laravel"></a>Laravel</h3><p>安装Clockwork之后需要在config/app.php文件下注册Laravel服务提供者</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="string">'providers'</span> =&gt; [</div><div class="line">	...</div><div class="line">	Clockwork\Support\Laravel\ClockworkServiceProvider::class,</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>当你使用Laravel 5的时候，你需要在你的app/Http/Kernel.php文件中添加Clockwork中间件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> $middleware = [</div><div class="line">	\Clockwork\Support\Laravel\ClockworkMiddleware::class,</div><div class="line">	...</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>默认情况下，Clockwork只能在调试模式下被调用，您可以在配置文件中更改这个和其他设置。使用下面的Artisan命令将配置文件发布到配置目录中:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ php artisan vendor:publish --provider=<span class="string">'Clockwork\Support\Laravel\ClockworkServiceProvider'</span></div></pre></td></tr></table></figure>
+<p>对于Laravel 4 你可以执行下面这个命令：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ php artisan config:publish itsgoingd/clockwork --path vendor/itsgoingd/clockwork/Clockwork/Support/Laravel/config/</div></pre></td></tr></table></figure>
+<p>Clockwork 提供了一个clock()辅助函数，它提供了一个比较简单的方法去记录Clockwork日志和事件.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">clock()-&gt;startEvent(<span class="string">'event_name'</span>, <span class="string">'Event description.'</span>); <span class="comment">// event called 'Event description.' appears in Clockwork timeline tab</span></div><div class="line"></div><div class="line">clock(<span class="string">'Message text.'</span>); <span class="comment">// 'Message text.' appears in Clockwork log tab</span></div><div class="line">logger(<span class="string">'Message text.'</span>); <span class="comment">// 'Message text.' appears in Clockwork log tab as well as application log file</span></div><div class="line"></div><div class="line">clock([<span class="string">'hello'</span> =&gt; <span class="string">'world'</span>]); <span class="comment">// logs json representation of the array</span></div><div class="line">clock(<span class="keyword">new</span> Object()); <span class="comment">// logs string representation of the objects if the object implements __toString magic method, logs json representation of output of toArray method if the object implements it, if neither is the case, logs json representation of the object cast to array</span></div><div class="line"></div><div class="line">clock()-&gt;endEvent(<span class="string">'event_name'</span>);</div></pre></td></tr></table></figure>
+<p>如果你比较喜欢使用Facades,你需要将下面这句话添加到 app/config/app.php文件中：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="string">'aliases'</span> =&gt; [</div><div class="line">	...</div><div class="line">	<span class="string">'Clockwork'</span> =&gt; Clockwork\Support\Laravel\Facade::class,</div><div class="line">]</div></pre></td></tr></table></figure>
+<h3 id="Lumen"><a href="#Lumen" class="headerlink" title="Lumen"></a>Lumen</h3><p>一旦安装了Clockwork，您需要在bootstrap/app.php中注册Clockwork服务提供程序:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$app-&gt;register(Clockwork\Support\Lumen\ClockworkServiceProvider::class);</div></pre></td></tr></table></figure>
+<p>你也可以添加Clockwork到上面提到的相同文件中：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$app-&gt;middleware([</div><div class="line">	...</div><div class="line">	Clockwork\Support\Lumen\ClockworkMiddleware::class,</div><div class="line">]);</div></pre></td></tr></table></figure>
+<h3 id="其他框架"><a href="#其他框架" class="headerlink" title="其他框架"></a>其他框架</h3><p>其他框架还支持 Slim 2 和 CodeIgniter 2.1，此文就不对其进行赘述，请参考<a href="https://github.com/itsgoingd/clockwork" target="_blank" rel="external">文档</a><br>对于其他框架这里没有提及的可以进行手动集成Clockwork,请参考<a href="https://stackdevji.github.io/2017/06/22/Integer-clockwork/" target="_blank" rel="external">将Chrome Clockwork集成到你的Web-app中</a></p>
+<p>最后需要在Chrome中安装clockwork的扩展程序，可以在谷歌商店中进行下载，需要翻墙。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clockwork/">clockwork</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具/">工具</a></li></ul>
+	</div>
+
+      
+
+      
+
+      
+        <div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode"></div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2017/06/22/Integer-clockwork/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          将Chrome Clockwork集成到你的Web-app中
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/06/16/vscode/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">吐槽下VS Code</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 CHENJI
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/Laravel/" style="font-size: 10px;">Laravel</a> <a href="/tags/clockwork/" style="font-size: 16.67px;">clockwork</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/mysql/" style="font-size: 13.33px;">mysql</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/php/" style="font-size: 20px;">php</a> <a href="/tags/学习笔记/" style="font-size: 16.67px;">学习笔记</a> <a href="/tags/工具/" style="font-size: 16.67px;">工具</a> <a href="/tags/运行原理/" style="font-size: 10px;">运行原理</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://bettercuicui.github.io/">杰大屌的博客</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://mushanshitiancai.github.io/">木杉的博客</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">史晨吉：&lt;br&gt;毕业于哈理工，目前就职于学霸君&lt;br&gt;&lt;br&gt;心有猛虎，细嗅蔷薇&lt;br&gt;&lt;br&gt;</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

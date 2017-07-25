@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="http://yoursite.com">
+  <title>Chrome的调试利器Clockwork(二) | chenji</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文简要介绍了clockwork结构体系结构，在实现对新框架的支持时非常有用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chrome的调试利器Clockwork(二)">
+<meta property="og:url" content="http://yoursite.com/2017/06/23/Clockwork-theory/index.html">
+<meta property="og:site_name" content="chenji">
+<meta property="og:description" content="本文简要介绍了clockwork结构体系结构，在实现对新框架的支持时非常有用。">
+<meta property="og:updated_time" content="2017-06-23T09:33:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chrome的调试利器Clockwork(二)">
+<meta name="twitter:description" content="本文简要介绍了clockwork结构体系结构，在实现对新框架的支持时非常有用。">
+  
+    <link rel="alternative" href="/atom.xml" title="chenji" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="https://avatars0.githubusercontent.com/u/21096631?v=3&amp;s=400" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">CHENJI</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">少说多做</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/stackdevji" title="github"><i class="icon-github"></i></a>
+		        
+					<a class="weibo" target="_blank" href="http://weibo.com/3157867187/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="weibo"><i class="icon-weibo"></i></a>
+		        
+					<a class="zhihu" target="_blank" href="https://www.zhihu.com/question/24107749" title="zhihu"><i class="icon-zhihu"></i></a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-sort"></i></div>
+  		<h1 class="header-author js-mobile-header hide">CHENJI</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="https://avatars0.githubusercontent.com/u/21096631?v=3&amp;s=400" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">CHENJI</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">少说多做</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/stackdevji" title="github"><i class="icon-github"></i></a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/3157867187/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="weibo"><i class="icon-weibo"></i></a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/question/24107749" title="zhihu"><i class="icon-zhihu"></i></a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-Clockwork-theory" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Chrome的调试利器Clockwork(二)
+    </h1>
+  
+
+        <a href="/2017/06/23/Clockwork-theory/" class="archive-article-date">
+  	<time datetime="2017-06-23T07:41:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-23</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文简要介绍了clockwork结构体系结构，在实现对新框架的支持时非常有用。<br><a id="more"></a></p>
+<h3 id="Chrome扩展"><a href="#Chrome扩展" class="headerlink" title="Chrome扩展"></a>Chrome扩展</h3><p>Chrome扩展检查了X-Clock-Version和X-Clockwork-Id头的HTTP响应。X-Clock-Version包含了Clockwork服务器端组件的版本，它允许在数据协议更改时保持与旧版本兼容的扩展。当在响应头中发现X-Clock-Version时，HTTP GET ajax请求被制成/__clockwork/{id}，其中{id}是X-Clockwork-Id头的值。请求的JSON的数据以指定的id(输出 Clockwork\Request\Request::toJson)返回，并在扩展中显示。</p>
+<h3 id="Server-side-library（服务端库）"><a href="#Server-side-library（服务端库）" class="headerlink" title="Server-side library（服务端库）"></a>Server-side library（服务端库）</h3><p>服务器端库提供了尽可能简单的为各种框架和应用程序添加支持。它由几个组件组成:</p>
+<ol>
+<li>DataSource - 收集数据</li>
+<li>Request - 表示收集的数据</li>
+<li>Storage - 存储和检索请求</li>
+<li>Support - 特定于框架的支持文件，如服务提供者，中间件等等</li>
+</ol>
+<p>典型的用法如下:</p>
+<ol>
+<li>Clockwork类被实例化，自动创建新的Request\Request实例</li>
+<li>通过$clockwork-&gt;addDataSource方法添加数据源</li>
+<li>通过$clockwork-&gt;setStorage设置storage实例</li>
+<li>应用程序运行。。。</li>
+<li>$clockwork-&gt;resolveRequest被调用 - Request实例通过每个DataSource的reslove()方法传递，每个DataSource将相关数据添加到请求实例中</li>
+<li>$clockwork-&gt;storeRequest被调用 - Request实例通过store()方法存储在Storage实例上</li>
+<li>Clockwork::VERSION的值作为X-Clockwork-Version header被发送，$clockwork-&gt;getRequest()-&gt;id的值作为X-Clockwork-Id header被发送</li>
+</ol>
+<p>当/__clockwork/{id}被请求的时候</p>
+<ol>
+<li>Storage实例被创建</li>
+<li>request通过$storage-&gt;retrieve($id)被检索</li>
+<li>JSON格式的数据通过$request-&gt;toJson()方法被输出</li>
+</ol>
+<p>收集的数据被存储在Request的对象中，仅仅通过公有属性被赋值的方法。在Request类中没有进行验证,DataSource只负责赋值而已。</p>
+<p>可用的赋值：</p>
+<ol>
+<li>id - 唯一的请求id，不应该手动设置，当创建新的请求实例时，由当前时间和随机数自动生成</li>
+<li>time - 请求时间，期望在微秒内数值</li>
+<li>method - 使用HTTP方法，期望字符串值</li>
+<li>uri - 请求的uri，期望是字符串的值</li>
+<li><p>headers - 请求的头，期望的值是数组形式，格式如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">   <span class="string">'string value of header name'</span> =&gt; <span class="keyword">array</span>(<span class="string">'string value of header value'</span>, ...),</div><div class="line">    ...</div><div class="line">]</div></pre></td></tr></table></figure>
+</li>
+<li><p>controller - 在MVC框架中使用的控制器名称，期望字符串值</p>
+</li>
+<li>getData - request GET数据，期望GET数据数组</li>
+<li>postData - request POST数据，期望POST数据数组</li>
+<li>sessionData - session数据，期望是session数组</li>
+<li>cookies - 请求的cookies,期望是cookies数组</li>
+<li>responseTime - 期望在发送响应时的微秒内数值，然后计算响应时间，以响应时间</li>
+<li>responseStatus - 响应HTTP状态码，期望数值</li>
+<li><p>databaseQueries - 数据库查询数据，包括durations，期望的数据格式如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">    [</div><div class="line">        <span class="string">'query'</span>   =&gt; <span class="string">'string value of first sql query in executable form'</span>,</div><div class="line">        <span class="string">'duration'</span> =&gt; <span class="string">'numeric value in miliseconds'</span></div><div class="line">    ],</div><div class="line">    ...</div><div class="line">    [</div><div class="line">    	...</div><div class="line">    ]</div><div class="line">]</div></pre></td></tr></table></figure>
+</li>
+<li><p>timelineData - 时间轴选项卡的数据，期望数组形式为:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">    [</div><div class="line">        <span class="string">'start'</span> =&gt; <span class="string">'numeric representation of events start time in microseconds'</span>,</div><div class="line">        <span class="string">'end'</span> =&gt; <span class="string">'numeric representation of events end time in microseconds'</span>,</div><div class="line">        <span class="string">'duration'</span> =&gt; <span class="string">'numeric representation of events duration in milliseconds'</span>,</div><div class="line">        <span class="string">'description'</span> =&gt; <span class="string">'string value describing the event'</span></div><div class="line">    ],</div><div class="line">    ...</div><div class="line">    [</div><div class="line">    	...</div><div class="line">    ]</div><div class="line">]</div></pre></td></tr></table></figure>
+</li>
+<li><p>有一个用于创建时间轴数据的助手对象 -  Request\Timeline</p>
+</li>
+<li><p>log - 应用程序日志，期望数组形式为:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">    [</div><div class="line">        <span class="string">'time'</span> =&gt; <span class="string">'numeric value of timestamp in seconds'</span>,</div><div class="line">        <span class="string">'level'</span> =&gt; <span class="string">'numeric constant representing message type'</span>,</div><div class="line">        <span class="string">'message'</span> =&gt; <span class="string">'string value of message'</span></div><div class="line">    ],</div><div class="line">    ...</div><div class="line">    [</div><div class="line">    	...</div><div class="line">    ]</div><div class="line"></div><div class="line">]</div></pre></td></tr></table></figure>
+</li>
+<li><p>可用的错误日志等级：1 - DEBUG, 2 - INFO, 3 - NOTICE, 4 - WARNING, 5 - ERROR</p>
+</li>
+<li>有一个用于创建日志数据的对象 - Request\Log</li>
+<li>routes - 应用程序的路由，期望数组的形式为：<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">    [</div><div class="line">        <span class="string">'uri'</span> =&gt; <span class="string">'string value of routes uri'</span>,</div><div class="line">        <span class="string">'name'</span> =&gt; <span class="string">'string value of routes name'</span>,</div><div class="line">        <span class="string">'action'</span> =&gt; <span class="string">'string value of routes callback'</span>,</div><div class="line">        <span class="string">'before'</span> =&gt; <span class="string">'string value of route'</span>s before filters<span class="string">',</span></div><div class="line">        'after<span class="string">' =&gt; '</span>string value of route<span class="string">'s after filter'</span></div><div class="line">    ],</div><div class="line">    ...</div><div class="line">    ...</div><div class="line">    [</div><div class="line">    	...</div><div class="line">    ]</div><div class="line">]</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>所有属性只能包含可以编码为JSON的数据(没有资源、对象实例和闭包)，因为这是用于存储和传输数据到扩展的格式。<br>注意，扩展不要求您使用这个库，您可以为您提供返回正确JSON数据的自定义实现，但是推荐使用该库提供一些稳定的API，允许数据格式进行更改。</p>
+<p>正确的JSON响应示例:<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"id"</span>:<span class="string">"1379711612.4843.251523074"</span>,</div><div class="line">    <span class="attr">"time"</span>:<span class="number">1379711611.8899</span>,</div><div class="line">    <span class="attr">"method"</span>:<span class="string">"GET"</span>,</div><div class="line">    <span class="attr">"uri"</span>:<span class="string">"\/users"</span>,</div><div class="line">    <span class="attr">"headers"</span>: &#123;</div><div class="line">        <span class="attr">"host"</span>:[<span class="string">"base.daylight.home"</span>],</div><div class="line">        <span class="attr">"x-real-ip"</span>:[<span class="string">"10.10.10.103"</span>],</div><div class="line">        <span class="attr">"connection"</span>:[<span class="string">"close"</span>],</div><div class="line">        <span class="attr">"accept"</span>:[<span class="string">"*\/*"</span>],</div><div class="line">        <span class="attr">"user-agent"</span>:[<span class="string">"Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/31.0.1637.0 Safari\/537.36"</span>],</div><div class="line">        <span class="attr">"accept-encoding"</span>:[<span class="string">"gzip,deflate,sdch"</span>],</div><div class="line">        <span class="attr">"accept-language"</span>:[<span class="string">"en-US,en;q=0.8,cs;q=0.6,sk;q=0.4"</span>],</div><div class="line">        <span class="attr">"cookie"</span>:[<span class="string">"laravel_session=s566k2i47igcam0v6nn8i0f4h5"</span>]</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"controller"</span>:<span class="string">"UsersController@index"</span>,</div><div class="line">    <span class="attr">"getData"</span>:[],</div><div class="line">    <span class="attr">"postData"</span>:[],</div><div class="line">    <span class="attr">"sessionData"</span>: &#123;</div><div class="line">        <span class="attr">"_sf2_attributes"</span>: &#123;</div><div class="line">            <span class="attr">"_token"</span>:<span class="string">"ZI3OJ0EliZieVvp9ol3hveu11NqMjSr6MXLe3tpF"</span></div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"cookies"</span>: &#123;</div><div class="line">        <span class="attr">"laravel_session"</span>:<span class="string">"s566k2i47igcam0v6nn8i0f4h5"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"responseTime"</span>:<span class="number">1379711612.5321</span>,</div><div class="line">    <span class="attr">"responseStatus"</span>:<span class="number">200</span>,</div><div class="line">    <span class="attr">"responseDuration"</span>:<span class="number">642.18783378601</span>,</div><div class="line">    <span class="attr">"databaseQueries"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"query"</span>:<span class="string">"SELECT count(*) as aggregate FROM `languages` WHERE `id` = 'en'"</span>,</div><div class="line">            <span class="attr">"duration"</span>:<span class="number">0.75</span></div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"query"</span>:<span class="string">"SELECT * FROM `languages`"</span>,</div><div class="line">            <span class="attr">"duration"</span>:<span class="number">0.52</span></div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    <span class="attr">"databaseDuration"</span>:<span class="number">1.27</span>,</div><div class="line">    <span class="attr">"timelineData"</span>: &#123;</div><div class="line">        <span class="attr">"total"</span>: &#123;</div><div class="line">            <span class="attr">"start"</span>:<span class="number">1379711611.8899</span>,</div><div class="line">            <span class="attr">"end"</span>:<span class="number">1379711612.5323</span>,</div><div class="line">            <span class="attr">"duration"</span>:<span class="number">642.45295524597</span>,</div><div class="line">            <span class="attr">"description"</span>:<span class="string">"Total execution time."</span></div><div class="line">        &#125;,</div><div class="line">        <span class="attr">"initialisation"</span>: &#123;</div><div class="line">            <span class="attr">"start"</span>:<span class="number">1379711611.8899</span>,</div><div class="line">            <span class="attr">"end"</span>:<span class="number">1379711612.4734</span>,</div><div class="line">            <span class="attr">"duration"</span>:<span class="number">583.5108757019</span>,</div><div class="line">            <span class="attr">"description"</span>:<span class="string">"Application initialisation."</span></div><div class="line">        &#125;,</div><div class="line">        <span class="attr">"run"</span>: &#123;</div><div class="line">            <span class="attr">"start"</span>:<span class="number">1379711612.4734</span>,</div><div class="line">            <span class="attr">"end"</span>:<span class="number">1379711612.5323</span>,</div><div class="line">            <span class="attr">"duration"</span>:<span class="number">58.935880661011</span>,</div><div class="line">            <span class="attr">"description"</span>:<span class="string">"Framework running."</span></div><div class="line">        &#125;,</div><div class="line">        <span class="attr">"boot"</span>: &#123;</div><div class="line">            <span class="attr">"start"</span>:<span class="number">1379711612.4734</span>,</div><div class="line">            <span class="attr">"end"</span>:<span class="number">1379711612.4743</span>,</div><div class="line">            <span class="attr">"duration"</span>:<span class="number">0.86092948913574</span>,</div><div class="line">            <span class="attr">"description"</span>:<span class="string">"Framework booting."</span></div><div class="line">        &#125;,</div><div class="line">        <span class="attr">"dispatch"</span>: &#123;</div><div class="line">            <span class="attr">"start"</span>:<span class="number">1379711612.4833</span>,</div><div class="line">            <span class="attr">"end"</span>:<span class="number">1379711612.5318</span>,</div><div class="line">            <span class="attr">"duration"</span>:<span class="number">48.506021499634</span>,</div><div class="line">            <span class="attr">"description"</span>:<span class="string">"Router dispatch."</span></div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"log"</span>:[],</div><div class="line">    <span class="attr">"routes"</span>:<span class="literal">null</span>,</div><div class="line">    <span class="attr">"userData"</span>:<span class="literal">null</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="完结"><a href="#完结" class="headerlink" title="完结"></a>完结</h3><p>原文地址:<a href="https://github.com/itsgoingd/clockwork/wiki/Development-notes" target="_blank" rel="external">https://github.com/itsgoingd/clockwork/wiki/Development-notes</a>,本文对原文进行翻译，快翻译吐了。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/clockwork/">clockwork</a></li></ul>
+	</div>
+
+      
+
+      
+
+      
+        <div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode"></div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2017/06/22/Integer-clockwork/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">将Chrome Clockwork集成到你的Web-app中</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 CHENJI
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/Laravel/" style="font-size: 10px;">Laravel</a> <a href="/tags/clockwork/" style="font-size: 16.67px;">clockwork</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/mysql/" style="font-size: 13.33px;">mysql</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/php/" style="font-size: 20px;">php</a> <a href="/tags/学习笔记/" style="font-size: 16.67px;">学习笔记</a> <a href="/tags/工具/" style="font-size: 16.67px;">工具</a> <a href="/tags/运行原理/" style="font-size: 10px;">运行原理</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://bettercuicui.github.io/">杰大屌的博客</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://mushanshitiancai.github.io/">木杉的博客</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">史晨吉：&lt;br&gt;毕业于哈理工，目前就职于学霸君&lt;br&gt;&lt;br&gt;心有猛虎，细嗅蔷薇&lt;br&gt;&lt;br&gt;</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
